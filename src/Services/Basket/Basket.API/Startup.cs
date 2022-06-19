@@ -1,3 +1,5 @@
+using Stripe;
+
 namespace Microsoft.eShopOnContainers.Services.Basket.API;
 public class Startup
 {
@@ -7,10 +9,12 @@ public class Startup
     }
 
     public IConfiguration Configuration { get; }
+    private readonly string _policyName = "CorsPolicy";
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public virtual IServiceProvider ConfigureServices(IServiceCollection services)
     {
+        StripeConfiguration.ApiKey = Configuration["StripeConfiguration:ApiKey"];
         services.AddGrpc(options =>
         {
             options.EnableDetailedErrors = true;
@@ -95,6 +99,7 @@ public class Startup
                 var factory = new ConnectionFactory()
                 {
                     HostName = Configuration["EventBusConnection"],
+                    VirtualHost = Configuration["Vhost"],
                     DispatchConsumersAsync = true
                 };
 
@@ -121,14 +126,14 @@ public class Startup
         RegisterEventBus(services);
 
 
-        services.AddCors(options =>
+        services.AddCors(opt =>
         {
-            options.AddPolicy("CorsPolicy",
-                builder => builder
-                .SetIsOriginAllowed((host) => true)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+            opt.AddPolicy(name: _policyName, builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
         });
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddTransient<IBasketRepository, RedisBasketRepository>();
@@ -163,7 +168,7 @@ public class Startup
             });
 
         app.UseRouting();
-        app.UseCors("CorsPolicy");
+        app.UseCors(_policyName);
         ConfigureAuth(app);
 
         app.UseStaticFiles();
