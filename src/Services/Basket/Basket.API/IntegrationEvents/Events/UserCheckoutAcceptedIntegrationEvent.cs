@@ -6,8 +6,6 @@ public record UserCheckoutAcceptedIntegrationEvent : IntegrationEvent
 
     public string UserName { get; }
 
-    public string UserEmail { get; }
-
     public int OrderNumber { get; init; }
 
     public string City { get; init; }
@@ -36,14 +34,13 @@ public record UserCheckoutAcceptedIntegrationEvent : IntegrationEvent
 
     public CustomerBasket Basket { get; }
 
-    public UserCheckoutAcceptedIntegrationEvent(string userId, string userName, string userEmail, string city, string street,
+    public UserCheckoutAcceptedIntegrationEvent(string userId, string userName, string city, string street,
         string state, string country, string zipCode, string cardNumber, string cardHolderName,
         DateTime cardExpiration, string cardSecurityNumber, int cardTypeId, string buyer, Guid requestId,
         CustomerBasket basket)
     {
         UserId = userId;
         UserName = userName;
-        UserEmail = userEmail;
         City = city;
         Street = street;
         State = state;

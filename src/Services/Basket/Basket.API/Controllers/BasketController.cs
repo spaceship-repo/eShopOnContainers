@@ -1,6 +1,4 @@
-﻿using Stripe.Checkout;
-
-namespace Microsoft.eShopOnContainers.Services.Basket.API.Controllers;
+﻿namespace Microsoft.eShopOnContainers.Services.Basket.API.Controllers;
 
 [Route("api/v1/[controller]")]
 [Authorize]
@@ -59,9 +57,8 @@ public class BasketController : ControllerBase
         }
 
         var userName = this.HttpContext.User.FindFirst(x => x.Type == ClaimTypes.Name).Value;
-        var userEmail = this.HttpContext.User.FindFirst(x => x.Type == ClaimTypes.Email).Value;
 
-        var eventMessage = new UserCheckoutAcceptedIntegrationEvent(userId, userName, userEmail, basketCheckout.City, basketCheckout.Street,
+        var eventMessage = new UserCheckoutAcceptedIntegrationEvent(userId, userName, basketCheckout.City, basketCheckout.Street,
             basketCheckout.State, basketCheckout.Country, basketCheckout.ZipCode, basketCheckout.CardNumber, basketCheckout.CardHolderName,
             basketCheckout.CardExpiration, basketCheckout.CardSecurityNumber, basketCheckout.CardTypeId, basketCheckout.Buyer, basketCheckout.RequestId, basket);
 
@@ -81,8 +78,6 @@ public class BasketController : ControllerBase
 
         return Accepted();
     }
-
-    
 
     // DELETE api/values/5
     [HttpDelete("{id}")]
