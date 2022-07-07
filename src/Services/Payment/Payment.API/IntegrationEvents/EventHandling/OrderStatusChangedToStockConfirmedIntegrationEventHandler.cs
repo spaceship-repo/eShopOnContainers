@@ -1,10 +1,14 @@
-﻿namespace Microsoft.eShopOnContainers.Payment.API.IntegrationEvents.EventHandling;
+﻿using Stripe;
+using System.Linq;
+
+namespace Microsoft.eShopOnContainers.Payment.API.IntegrationEvents.EventHandling;
     
 public class OrderStatusChangedToStockConfirmedIntegrationEventHandler :
     IIntegrationEventHandler<OrderStatusChangedToStockConfirmedIntegrationEvent>
 {
     private readonly IEventBus _eventBus;
     private readonly PaymentSettings _settings;
+    
     private readonly ILogger<OrderStatusChangedToStockConfirmedIntegrationEventHandler> _logger;
 
     public OrderStatusChangedToStockConfirmedIntegrationEventHandler(
@@ -33,18 +37,36 @@ public class OrderStatusChangedToStockConfirmedIntegrationEventHandler :
             // Instead of a real payment we just take the env. var to simulate the payment 
             // The payment can be successful or it can fail
 
-            if (_settings.PaymentSucceeded)
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntentSearchOptions = new PaymentIntentSearchOptions
             {
-                orderPaymentIntegrationEvent = new OrderPaymentSucceededIntegrationEvent(@event.OrderId);
-            }
-            else
+                Query = $"metadata['OrderId']:'{@event.OrderId}'",
+            };
+            var paymentIntents = await paymentIntentService.SearchAsync(paymentIntentSearchOptions);
+
+            var paymentIntent = paymentIntents.Data.FirstOrDefault();
+
+            if (paymentIntent != null)
             {
-                orderPaymentIntegrationEvent = new OrderPaymentFailedIntegrationEvent(@event.OrderId);
+                var paymentIntentConfirmOptions = new PaymentIntentConfirmOptions
+                {
+                    
+                };
+                paymentIntent = await paymentIntentService.ConfirmAsync(paymentIntent.Id, paymentIntentConfirmOptions);
             }
 
-            _logger.LogInformation("----- Publishing integration event: {IntegrationEventId} from {AppName} - ({@IntegrationEvent})", orderPaymentIntegrationEvent.Id, Program.AppName, orderPaymentIntegrationEvent);
+            //if (_settings.PaymentSucceeded)
+            //{
+            //    orderPaymentIntegrationEvent = new OrderPaymentSucceededIntegrationEvent(@event.OrderId);
+            //}
+            //else
+            //{
+            //    orderPaymentIntegrationEvent = new OrderPaymentFailedIntegrationEvent(@event.OrderId);
+            //}
 
-            _eventBus.Publish(orderPaymentIntegrationEvent);
+            //_logger.LogInformation("----- Publishing integration event: {IntegrationEventId} from {AppName} - ({@IntegrationEvent})", orderPaymentIntegrationEvent.Id, Program.AppName, orderPaymentIntegrationEvent);
+
+            //_eventBus.Publish(orderPaymentIntegrationEvent);
 
             await Task.CompletedTask;
         }

@@ -60,7 +60,7 @@ public class NewOrderRequestHandlerTest
 
     private Order FakeOrder()
     {
-        return new Order("1", "fakeName", new Address("street", "city", "state", "country", "zipcode"), 1, "12", "111", "fakeName", DateTime.Now.AddYears(1));
+        return new Order("1", "fakeName", new Address("street", "city", "state", "country", "zipcode"), 1, "12", "111", "fakeName", DateTime.Now.AddYears(1), "", "");
     }
 
     private CreateOrderCommand FakeOrderRequestWithBuyer(Dictionary<string, object> args = null)
@@ -69,6 +69,7 @@ public class NewOrderRequestHandlerTest
             new List<BasketItem>(),
             userId: args != null && args.ContainsKey("userId") ? (string)args["userId"] : null,
             userName: args != null && args.ContainsKey("userName") ? (string)args["userName"] : null,
+            userEmail: args != null && args.ContainsKey("userEmail") ? (string)args["userEmail"] : null,
             city: args != null && args.ContainsKey("city") ? (string)args["city"] : null,
             street: args != null && args.ContainsKey("street") ? (string)args["street"] : null,
             state: args != null && args.ContainsKey("state") ? (string)args["state"] : null,

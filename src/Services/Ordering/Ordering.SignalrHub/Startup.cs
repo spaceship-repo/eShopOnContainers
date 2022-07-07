@@ -57,6 +57,7 @@ public class Startup
                 var factory = new ConnectionFactory()
                 {
                     HostName = Configuration["EventBusConnection"],
+                    VirtualHost = Configuration["Vhost"],
                     DispatchConsumersAsync = true
                 };
 
@@ -239,7 +240,7 @@ public static class CustomExtensionMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}",
+                    $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "signalr-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }

@@ -158,7 +158,7 @@ public static class CustomExtensionMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}",
+                    $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "catalog-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }
@@ -261,6 +261,7 @@ public static class CustomExtensionMethods
                 var factory = new ConnectionFactory()
                 {
                     HostName = configuration["EventBusConnection"],
+                    VirtualHost = configuration["Vhost"],
                     DispatchConsumersAsync = true
                 };
 

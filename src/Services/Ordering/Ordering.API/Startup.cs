@@ -1,3 +1,5 @@
+using Stripe;
+
 namespace Microsoft.eShopOnContainers.Services.Ordering.API;
 
 public class Startup
@@ -11,6 +13,7 @@ public class Startup
 
     public virtual IServiceProvider ConfigureServices(IServiceCollection services)
     {
+        StripeConfiguration.ApiKey = Configuration["StripeConfiguration:ApiKey"];
         services
             .AddGrpc(options =>
             {
@@ -175,7 +178,7 @@ static class CustomExtensionsMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}",
+                    $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "ordering-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }
@@ -274,6 +277,7 @@ static class CustomExtensionsMethods
                 var factory = new ConnectionFactory()
                 {
                     HostName = configuration["EventBusConnection"],
+                    VirtualHost = configuration["Vhost"],
                     DispatchConsumersAsync = true
                 };
 

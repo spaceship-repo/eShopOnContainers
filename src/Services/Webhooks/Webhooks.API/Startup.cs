@@ -1,3 +1,5 @@
+using Stripe;
+
 namespace Webhooks.API;
 public class Startup
 {
@@ -11,6 +13,7 @@ public class Startup
 
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
+        StripeConfiguration.ApiKey = Configuration["StripeConfiguration:ApiKey"];
         services
             .AddAppInsight(Configuration)
             .AddCustomRouting(Configuration)
@@ -263,6 +266,7 @@ static class CustomExtensionMethods
                     var factory = new ConnectionFactory()
                     {
                         HostName = configuration["EventBusConnection"],
+                        VirtualHost = configuration["Vhost"],
                         DispatchConsumersAsync = true
                     };
 

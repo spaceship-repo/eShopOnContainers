@@ -37,7 +37,7 @@ namespace Ordering.BackgroundTasks.Extensions
             else
             {
                 hcBuilder.AddRabbitMQ(
-                        $"amqp://{configuration["EventBusConnection"]}",
+                        $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                         name: "orderingtask-rabbitmqbus-check",
                         tags: new string[] { "rabbitmqbus" });
             }
@@ -78,6 +78,7 @@ namespace Ordering.BackgroundTasks.Extensions
                     var factory = new ConnectionFactory()
                     {
                         HostName = configuration["EventBusConnection"],
+                        VirtualHost = configuration["Vhost"],
                         DispatchConsumersAsync = true
                     };
 

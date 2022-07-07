@@ -1,4 +1,6 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Ordering.API.Application.DomainEventHandlers.OrderStartedEvent;
+﻿using Stripe;
+
+namespace Microsoft.eShopOnContainers.Services.Ordering.API.Application.DomainEventHandlers.OrderStartedEvent;
 
 public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler
                     : INotificationHandler<OrderStartedDomainEvent>
@@ -22,6 +24,25 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler
 
     public async Task Handle(OrderStartedDomainEvent orderStartedEvent, CancellationToken cancellationToken)
     {
+        var paymentIntentCreateOptions = new PaymentIntentCreateOptions
+        {
+            Amount = 100,
+            Currency = "usd",
+            PaymentMethodTypes = new List<string>
+                        {
+                            "card",
+                        },
+            Customer = orderStartedEvent.StripeCustomerId,
+            PaymentMethod = orderStartedEvent.StripePaymentMethodId,
+            Metadata = new Dictionary<string, string>() 
+            {
+                { "OrderId",  orderStartedEvent.Order.Id.ToString()}, 
+            }
+
+        };
+        var paymentIntentService = new PaymentIntentService();
+        var paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+
         var cardTypeId = (orderStartedEvent.CardTypeId != 0) ? orderStartedEvent.CardTypeId : 1;
         var buyer = await _buyerRepository.FindAsync(orderStartedEvent.UserId);
         bool buyerOriginallyExisted = (buyer == null) ? false : true;

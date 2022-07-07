@@ -20,9 +20,7 @@ public class Order
     private int _orderStatusId;
 
     private string _description;
-
-
-
+     
     // Draft orders have this set to true. Currently we don't check anywhere the draft status of an Order, but we could do it if needed
     private bool _isDraft;
 
@@ -33,6 +31,7 @@ public class Order
     private readonly List<OrderItem> _orderItems;
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
+    public int? GetPaymentMethodId => _paymentMethodId;
     private int? _paymentMethodId;
 
     public static Order NewDraft()
@@ -49,7 +48,7 @@ public class Order
     }
 
     public Order(string userId, string userName, Address address, int cardTypeId, string cardNumber, string cardSecurityNumber,
-            string cardHolderName, DateTime cardExpiration, int? buyerId = null, int? paymentMethodId = null) : this()
+            string cardHolderName, DateTime cardExpiration, string stripeCustomerId, string stripePaymentMethodId, int? buyerId = null, int? paymentMethodId = null) : this()
     {
         _buyerId = buyerId;
         _paymentMethodId = paymentMethodId;
@@ -60,7 +59,7 @@ public class Order
         // Add the OrderStarterDomainEvent to the domain events collection 
         // to be raised/dispatched when comitting changes into the Database [ After DbContext.SaveChanges() ]
         AddOrderStartedDomainEvent(userId, userName, cardTypeId, cardNumber,
-                                    cardSecurityNumber, cardHolderName, cardExpiration);
+                                    cardSecurityNumber, cardHolderName, cardExpiration, stripeCustomerId, stripePaymentMethodId);
     }
 
     // DDD Patterns comment
@@ -174,11 +173,12 @@ public class Order
     }
 
     private void AddOrderStartedDomainEvent(string userId, string userName, int cardTypeId, string cardNumber,
-            string cardSecurityNumber, string cardHolderName, DateTime cardExpiration)
+            string cardSecurityNumber, string cardHolderName, DateTime cardExpiration, string stripeCustomerId, string stripePaymentMethodId)
     {
         var orderStartedDomainEvent = new OrderStartedDomainEvent(this, userId, userName, cardTypeId,
                                                                     cardNumber, cardSecurityNumber,
-                                                                    cardHolderName, cardExpiration);
+                                                                    cardHolderName, cardExpiration, 
+                                                                    stripeCustomerId, stripePaymentMethodId, GetTotal());
 
         this.AddDomainEvent(orderStartedDomainEvent);
     }

@@ -12,13 +12,17 @@ namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.Events
         public string CardNumber { get; }
         public string CardSecurityNumber { get; }
         public string CardHolderName { get; }
+        public string StripeCustomerId { get; }
+        public string StripePaymentMethodId { get; }
+
+        public Decimal TotalAmount { get; }
         public DateTime CardExpiration { get; }
         public Order Order { get; }
 
         public OrderStartedDomainEvent(Order order, string userId, string userName,
                                        int cardTypeId, string cardNumber,
                                        string cardSecurityNumber, string cardHolderName,
-                                       DateTime cardExpiration)
+                                       DateTime cardExpiration, string stripeCustomerId, string stripePaymentMethodId, decimal totalAmount)
         {
             Order = order;
             UserId = userId;
@@ -28,6 +32,9 @@ namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.Events
             CardSecurityNumber = cardSecurityNumber;
             CardHolderName = cardHolderName;
             CardExpiration = cardExpiration;
+            StripeCustomerId = stripeCustomerId;
+            StripePaymentMethodId = stripePaymentMethodId;
+            TotalAmount = totalAmount;
         }
     }
 }

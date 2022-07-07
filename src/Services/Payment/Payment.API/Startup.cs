@@ -1,3 +1,5 @@
+using Stripe;
+
 namespace Microsoft.eShopOnContainers.Payment.API;
 
 public class Startup
@@ -12,6 +14,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
+        StripeConfiguration.ApiKey = Configuration["StripeConfiguration:ApiKey"];
         services.AddCustomHealthCheck(Configuration);
         services.Configure<PaymentSettings>(Configuration);
 
@@ -35,6 +38,7 @@ public class Startup
                 var factory = new ConnectionFactory()
                 {
                     HostName = Configuration["EventBusConnection"],
+                    VirtualHost = Configuration["Vhost"],
                     DispatchConsumersAsync = true
                 };
 
@@ -168,7 +172,7 @@ public static class CustomExtensionMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}",
+                    $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "payment-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }

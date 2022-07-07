@@ -4,6 +4,14 @@ public record OrderStatusChangedToStockConfirmedIntegrationEvent : IntegrationEv
 {
     public int OrderId { get; }
 
-    public OrderStatusChangedToStockConfirmedIntegrationEvent(int orderId)
-        => OrderId = orderId;
+    public string PaymentMethod { get; }
+
+    public string OrderItems { get; }
+
+    public OrderStatusChangedToStockConfirmedIntegrationEvent(int orderId, string paymentMethod, string orderItems)
+    {
+        OrderId = orderId;
+        PaymentMethod = paymentMethod;
+        OrderItems = orderItems;    
+    }
 }

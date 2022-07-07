@@ -25,6 +25,9 @@ public class CreateOrderCommand
     public string UserName { get; private set; }
 
     [DataMember]
+    public string UserEmail { get; private set; }
+
+    [DataMember]
     public string City { get; private set; }
 
     [DataMember]
@@ -62,13 +65,14 @@ public class CreateOrderCommand
         _orderItems = new List<OrderItemDTO>();
     }
 
-    public CreateOrderCommand(List<BasketItem> basketItems, string userId, string userName, string city, string street, string state, string country, string zipcode,
+    public CreateOrderCommand(List<BasketItem> basketItems, string userId, string userName, string userEmail, string city, string street, string state, string country, string zipcode,
         string cardNumber, string cardHolderName, DateTime cardExpiration,
         string cardSecurityNumber, int cardTypeId) : this()
     {
         _orderItems = basketItems.ToOrderItemsDTO().ToList();
         UserId = userId;
         UserName = userName;
+        UserEmail = userEmail;
         City = city;
         Street = street;
         State = state;
