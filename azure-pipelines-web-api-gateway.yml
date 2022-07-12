@@ -1,0 +1,40 @@
+name : Docker-CI
+trigger:
+- dev
+
+resources:
+- repo: self
+ 
+pool:
+  vmImage: 'ubuntu-latest'
+ 
+variables:
+  ImageName: 'manhcuong94/eshoponcontainer-web-api-gateway:latest'
+ 
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build and push Docker image
+    steps:
+    - task: Docker@1
+      displayName: 'Build the Docker image'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub - eshopOnContainer'
+        command: 'Build an image'
+        dockerFile: '$(Build.SourcesDirectory)/src/ApiGateways/Web.Bff.Shopping/aggregator/Dockerfile'
+        imageName: '$(ImageName)'
+        includeLatestTag: true
+        useDefaultContext: false
+        buildContext: '$(Build.SourcesDirectory)/src/'
+
+    - task: Docker@1
+      displayName: 'Push the Docker image to Dockerhub'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub - eshopOnContainer'
+        command: 'Push an image'
+        imageName: '$(ImageName)'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
