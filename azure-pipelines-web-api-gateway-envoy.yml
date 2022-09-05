@@ -1,29 +1,39 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
+name : Docker-CI
 trigger:
 - dev
 
 resources:
 - repo: self
-
+ 
+pool:
+  vmImage: 'ubuntu-latest'
+ 
 variables:
-  tag: '$(Build.BuildId)'
-
+  ImageName: 'manhcuong94/eshoponcontainer-web-api-gateway-envoy:latest'
+ 
 stages:
 - stage: Build
   displayName: Build image
-  jobs:
+  jobs:  
   - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
+    displayName: Build and push Docker image
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: Docker@1
+      displayName: 'Build the Docker image'
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/deploy/elk/elasticsearch/Dockerfile'
-        tags: |
-          $(tag)
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub - eshopOnContainer'
+        command: 'Build an image'
+        dockerFile: '$(Build.SourcesDirectory)/src/ApiGateways/Envoy/Dockerfile'
+        imageName: '$(ImageName)'
+        includeLatestTag: true
+        useDefaultContext: false
+
+    - task: Docker@1
+      displayName: 'Push the Docker image to Dockerhub'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub - eshopOnContainer'
+        command: 'Push an image'
+        imageName: '$(ImageName)'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
