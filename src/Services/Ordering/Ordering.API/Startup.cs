@@ -178,7 +178,7 @@ static class CustomExtensionsMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                    $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "ordering-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }
