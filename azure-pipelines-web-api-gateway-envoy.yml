@@ -9,7 +9,7 @@ pool:
   vmImage: 'ubuntu-latest'
  
 variables:
-  ImageName: 'manhcuong94/eshoponcontainer-web-api-gateway-envoy:latest'
+  ImageName: 'manhcuong94/eshoponcontainer-web-apigateway-envoy:latest'
  
 stages:
 - stage: Build
