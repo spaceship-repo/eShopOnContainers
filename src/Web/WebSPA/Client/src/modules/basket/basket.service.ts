@@ -31,6 +31,7 @@ export class BasketService {
         this.basket.items = [];
         this.basketUrl = this.configurationService.serverSettings.purchaseUrl;
         this.purchaseUrl = this.configurationService.serverSettings.purchaseUrl;
+        this.basket.buyerId = this.authService?.UserData?.sub;
         // Init:
         if (this.authService.IsAuthorized) {
             if (this.authService.UserData) {
