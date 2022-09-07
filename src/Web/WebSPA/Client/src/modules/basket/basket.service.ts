@@ -29,7 +29,8 @@ export class BasketService {
 
     constructor(private service: DataService, private authService: SecurityService, private basketWrapperService: BasketWrapperService, private router: Router, private configurationService: ConfigurationService, private storageService: StorageService) {
         this.basket.items = [];
-
+        this.basketUrl = this.configurationService.serverSettings.purchaseUrl;
+        this.purchaseUrl = this.configurationService.serverSettings.purchaseUrl;
         // Init:
         if (this.authService.IsAuthorized) {
             if (this.authService.UserData) {
