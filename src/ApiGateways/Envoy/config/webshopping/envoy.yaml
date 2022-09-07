@@ -106,7 +106,7 @@ static_resources:
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: webshoppingagg
+        address: https://eshoponcontainer-web-api-gateway.azurewebsites.net
         port_value: 80
   - name: catalog
     connect_timeout: 0.25s
@@ -114,7 +114,7 @@ static_resources:
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: catalog-api
+        address: https://eshoponcontainer-catalog-api.azurewebsites.net
         port_value: 80
   - name: basket
     connect_timeout: 0.25s
@@ -122,7 +122,7 @@ static_resources:
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: basket-api
+        address: https://eshoponcontainer-basket-api.azurewebsites.net
         port_value: 80
   - name: ordering
     connect_timeout: 0.25s
@@ -130,7 +130,7 @@ static_resources:
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: ordering-api
+        address: https://eshoponcontainer-ordering-api.azurewebsites.net
         port_value: 80
   - name: signalr-hub
     connect_timeout: 0.25s
@@ -138,5 +138,5 @@ static_resources:
     lb_policy: round_robin
     hosts:
     - socket_address:
-        address: ordering-signalrhub
+        address: https://eshoponcontainer-ordering-signalrhub.azurewebsites.net
         port_value: 80
