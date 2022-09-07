@@ -107,7 +107,7 @@ static_resources:
     hosts:
     - socket_address:
         address: eshoponcontainer-web-api-gateway.azurewebsites.net
-        port_value: 80
+        port_value: 443
   - name: catalog
     connect_timeout: 0.25s
     type: strict_dns
@@ -115,7 +115,7 @@ static_resources:
     hosts:
     - socket_address:
         address: eshoponcontainer-catalog-api.azurewebsites.net
-        port_value: 80
+        port_value: 443
   - name: basket
     connect_timeout: 0.25s
     type: strict_dns
@@ -123,7 +123,7 @@ static_resources:
     hosts:
     - socket_address:
         address: eshoponcontainer-basket-api.azurewebsites.net
-        port_value: 80
+        port_value: 443
   - name: ordering
     connect_timeout: 0.25s
     type: strict_dns
@@ -131,7 +131,7 @@ static_resources:
     hosts:
     - socket_address:
         address: eshoponcontainer-ordering-api.azurewebsites.net
-        port_value: 80
+        port_value: 443
   - name: signalr-hub
     connect_timeout: 0.25s
     type: strict_dns
@@ -139,4 +139,4 @@ static_resources:
     hosts:
     - socket_address:
         address: eshoponcontainer-ordering-signalrhub.azurewebsites.net
-        port_value: 80
+        port_value: 443
