@@ -24,7 +24,6 @@ export class CatalogService {
     }
 
     getCatalog(pageIndex: number, pageSize: number, brand: number, type: number): Observable<ICatalog> {
-        debugger
         let url = this.catalogUrl;
 
         if (type) {

@@ -68,7 +68,7 @@ export class BasketService {
 
     setBasket(basket): Observable<boolean> {
         let url = this.purchaseUrl + '/b/api/v1/basket/';
-
+        console.log('basketUrl', url)
         this.basket = basket;
 
         return this.service.post(url, basket).pipe<boolean>(tap((response: any) => true));
