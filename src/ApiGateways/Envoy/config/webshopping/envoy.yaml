@@ -28,7 +28,7 @@ static_resources:
                   prefix: "/c/"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: "/catalog-api/"
+                  prefix_rewrite: "/"
                   cluster: catalog
               - name: "c-long"
                 match:
@@ -41,7 +41,7 @@ static_resources:
                   prefix: "/o/"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: "/ordering-api/"
+                  prefix_rewrite: "/"
                   cluster: ordering
               - name: "o-long"
                 match:
@@ -64,7 +64,7 @@ static_resources:
                   prefix: "/b/"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: "/basket-api/"
+                  prefix_rewrite: "/"
                   cluster: basket
               - name: "b-long"
                 match:
