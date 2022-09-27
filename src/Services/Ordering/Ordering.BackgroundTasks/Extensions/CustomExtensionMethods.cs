@@ -37,7 +37,7 @@ namespace Ordering.BackgroundTasks.Extensions
             else
             {
                 hcBuilder.AddRabbitMQ(
-                        $"amqp://{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                        $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                         name: "orderingtask-rabbitmqbus-check",
                         tags: new string[] { "rabbitmqbus" });
             }

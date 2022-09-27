@@ -9,7 +9,7 @@ pool:
   vmImage: 'ubuntu-latest'
  
 variables:
-  ImageName: 'manhcuong94/eshoponcontainer-identity-api:lastest'
+  ImageName: 'manhcuong94/eshoponcontainer-identity-api:latest'
  
 stages:
 - stage: Build

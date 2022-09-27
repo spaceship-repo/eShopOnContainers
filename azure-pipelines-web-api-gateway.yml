@@ -9,7 +9,7 @@ pool:
   vmImage: 'ubuntu-latest'
  
 variables:
-  ImageName: 'manhcuong94/eshoponcontainer-catalog-api:latest'
+  ImageName: 'manhcuong94/eshoponcontainer-web-api-gateway:latest'
  
 stages:
 - stage: Build
@@ -24,7 +24,7 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub - eshopOnContainer'
         command: 'Build an image'
-        dockerFile: '$(Build.SourcesDirectory)/src/Services/Catalog/Catalog.API/Dockerfile'
+        dockerFile: '$(Build.SourcesDirectory)/src/ApiGateways/Web.Bff.Shopping/aggregator/Dockerfile'
         imageName: '$(ImageName)'
         includeLatestTag: true
         useDefaultContext: false

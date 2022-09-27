@@ -29,8 +29,8 @@ export class BasketService {
 
     constructor(private service: DataService, private authService: SecurityService, private basketWrapperService: BasketWrapperService, private router: Router, private configurationService: ConfigurationService, private storageService: StorageService) {
         this.basket.items = [];
-
         // Init:
+        console.log('this.authService ', this.authService)
         if (this.authService.IsAuthorized) {
             if (this.authService.UserData) {
                 this.basket.buyerId = this.authService.UserData.sub;
@@ -68,7 +68,7 @@ export class BasketService {
 
     setBasket(basket): Observable<boolean> {
         let url = this.purchaseUrl + '/b/api/v1/basket/';
-
+        console.log('basketUrl', url)
         this.basket = basket;
 
         return this.service.post(url, basket).pipe<boolean>(tap((response: any) => true));
