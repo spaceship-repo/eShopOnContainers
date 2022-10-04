@@ -1,4 +1,6 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Ordering.API.Infrastructure.AutofacModules;
+﻿using Microsoft.eShopOnContainers.Services.Ordering.API.Application.DomainEventHandlers.OrderGracePeriodConfirmed;
+
+namespace Microsoft.eShopOnContainers.Services.Ordering.API.Infrastructure.AutofacModules;
 
 public class MediatorModule : Autofac.Module
 {
@@ -14,6 +16,9 @@ public class MediatorModule : Autofac.Module
         // Register the DomainEventHandler classes (they implement INotificationHandler<>) in assembly holding the Domain Events
         builder.RegisterAssemblyTypes(typeof(ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler).GetTypeInfo().Assembly)
             .AsClosedTypesOf(typeof(INotificationHandler<>));
+
+        builder.RegisterAssemblyTypes(typeof(OrderStatusChangedToAwaitingValidationDomainEventHandler).GetTypeInfo().Assembly)
+           .AsClosedTypesOf(typeof(INotificationHandler<>));
 
         // Register the Command's Validators (Validators based on FluentValidation library)
         builder
