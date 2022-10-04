@@ -4,10 +4,11 @@
 public class SetAwaitingValidationOrderStatusCommandHandler : IRequestHandler<SetAwaitingValidationOrderStatusCommand, bool>
 {
     private readonly IOrderRepository _orderRepository;
-
-    public SetAwaitingValidationOrderStatusCommandHandler(IOrderRepository orderRepository)
+    private readonly ILogger<SetAwaitingValidationOrderStatusCommandHandler> _logger;
+    public SetAwaitingValidationOrderStatusCommandHandler(IOrderRepository orderRepository, ILogger<SetAwaitingValidationOrderStatusCommandHandler> logger)
     {
         _orderRepository = orderRepository;
+        _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -23,8 +24,9 @@ public class SetAwaitingValidationOrderStatusCommandHandler : IRequestHandler<Se
         {
             return false;
         }
-
+        _logger.LogInformation("----- Start SetAwaitingValidationStatus()");
         orderToUpdate.SetAwaitingValidationStatus();
+        _logger.LogInformation("----- End SetAwaitingValidationStatus()", orderToUpdate);
         return await _orderRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
     }
 }
