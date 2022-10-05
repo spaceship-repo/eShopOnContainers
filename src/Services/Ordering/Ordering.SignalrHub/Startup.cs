@@ -89,7 +89,7 @@ public class Startup
 
         //configure autofac
         var container = new ContainerBuilder();
-        container.RegisterModule(new ApplicationModule());
+        // container.RegisterModule(new ApplicationModule());
         container.Populate(services);
 
         return new AutofacServiceProvider(container.Build());
