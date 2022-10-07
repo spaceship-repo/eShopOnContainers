@@ -10,7 +10,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using Serilog;
-
+using System;
 namespace Ordering.BackgroundTasks.Extensions
 {
     public static class CustomExtensionMethods
@@ -18,6 +18,7 @@ namespace Ordering.BackgroundTasks.Extensions
         public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
         {
             var hcBuilder = services.AddHealthChecks();
+            var _isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
             hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
 
@@ -37,7 +38,7 @@ namespace Ordering.BackgroundTasks.Extensions
             else
             {
                 hcBuilder.AddRabbitMQ(
-                        $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                        _isDevelopment ? $"amqp://{configuration["EventBusConnection"]}" : $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                         name: "orderingtask-rabbitmqbus-check",
                         tags: new string[] { "rabbitmqbus" });
             }

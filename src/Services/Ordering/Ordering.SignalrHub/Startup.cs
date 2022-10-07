@@ -1,5 +1,5 @@
 namespace Microsoft.eShopOnContainers.Services.Ordering.SignalrHub;
-
+using System;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -139,7 +139,7 @@ public class Startup
 
         eventBus.Subscribe<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
         eventBus.Subscribe<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
-        eventBus.Subscribe<OrderStatusChangedToStockConfirmedIntegrationEvent, OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
+        // eventBus.Subscribe<OrderStatusChangedToStockConfirmedIntegrationEvent, OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
         eventBus.Subscribe<OrderStatusChangedToShippedIntegrationEvent, OrderStatusChangedToShippedIntegrationEventHandler>();
         eventBus.Subscribe<OrderStatusChangedToCancelledIntegrationEvent, OrderStatusChangedToCancelledIntegrationEventHandler>();
         eventBus.Subscribe<OrderStatusChangedToSubmittedIntegrationEvent, OrderStatusChangedToSubmittedIntegrationEventHandler>();
@@ -224,6 +224,7 @@ public static class CustomExtensionMethods
     public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
     {
         var hcBuilder = services.AddHealthChecks();
+        var _isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
         hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
 
@@ -240,7 +241,7 @@ public static class CustomExtensionMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                    _isDevelopment ? $"amqp://{configuration["EventBusConnection"]}" : $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "signalr-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }

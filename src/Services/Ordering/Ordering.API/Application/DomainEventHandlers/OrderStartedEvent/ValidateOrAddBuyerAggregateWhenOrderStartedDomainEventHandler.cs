@@ -26,7 +26,7 @@ public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler
     {
         var paymentIntentCreateOptions = new PaymentIntentCreateOptions
         {
-            Amount = 100,
+            Amount = orderStartedEvent.TotalAmount,
             Currency = "usd",
             PaymentMethodTypes = new List<string>
                         {

@@ -1,4 +1,5 @@
 using Stripe;
+using System;
 
 namespace Microsoft.eShopOnContainers.Services.Ordering.API;
 
@@ -156,6 +157,7 @@ static class CustomExtensionsMethods
     public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         var hcBuilder = services.AddHealthChecks();
+        var _isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
         hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
 
@@ -178,7 +180,7 @@ static class CustomExtensionsMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                    _isDevelopment ? $"amqp://{configuration["EventBusConnection"]}" : $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "ordering-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }

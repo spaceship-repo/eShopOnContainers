@@ -1,5 +1,5 @@
 namespace Microsoft.eShopOnContainers.Services.Catalog.API;
-
+using System;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -126,7 +126,7 @@ public static class CustomExtensionMethods
     {
         var accountName = configuration.GetValue<string>("AzureStorageAccountName");
         var accountKey = configuration.GetValue<string>("AzureStorageAccountKey");
-
+        var _isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
         var hcBuilder = services.AddHealthChecks();
 
         hcBuilder
@@ -158,7 +158,7 @@ public static class CustomExtensionMethods
         {
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
+                    _isDevelopment ? $"amqp://{configuration["EventBusConnection"]}" : $"amqp://{configuration["Vhost"]}:{configuration["EventBusPassword"]}@{configuration["EventBusConnection"]}/{configuration["Vhost"]}",
                     name: "catalog-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
         }
